@@ -1,18 +1,20 @@
 const config = require('../config/config');
 const bodyParser = require('body-parser');
 const express = require('express');
-const app = express();
-
 const db = require('../config/db');
+const logging = require('./logs');
 
-app.connectToDB = () => {
-  db.connect();
-};
+const app = express();
+const router = express.Router();
 
-app.use(bodyParser.urlencoded({
-  extended: true,
-}));
+app.init = () => global.config = config;
+app.connectToDB = () => db.connect();
 
-global.config = config;
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }))
+
+app.use(logging);
+app.use(router.use('/api', require('./router')));
+
 
 module.exports = app;
