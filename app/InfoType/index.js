@@ -1,4 +1,4 @@
-const InfoType = require('InfoType');
+const InfoType = require('./InfoType');
 const router = require('express').Router();
 
 router.get('/', (req, res) => {
@@ -8,15 +8,17 @@ router.get('/', (req, res) => {
   });
 });
 router.get('/:id', (req, res) => {
-  InfoType.findById({ _id: req.params.id }, (err, type => {
+  console.log(req.params.id);
+  InfoType.findById(req.params.id, (err, type) => {
     if (err) throw err;
-    res.end(type);
-  }));
+    res.send(type);
+  });
 });
 
 router.post('/', (req, res) => {
   const { name, type, validation } = req.body
   InfoType.create({ name, type, validation }, (err, type) => {
+    if (err) throw err;
     res.status(201).send(type);
   });
 });
@@ -38,6 +40,7 @@ router.put('/:id', (req, res) => {
 });
 
 router.delete(':/id', (req, res) => {
+  res.send('delete');
   InfoType.findById(req.params.id, (err, type) => {
     if (err) throw err;
     res.send(type);
