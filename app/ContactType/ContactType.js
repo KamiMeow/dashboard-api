@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const ContactTypeModel = new mongoose.Schema({
   value: { type: String, uinique: true, required: true },
   name: { type: String, uinique: true, required: true },
-  regExp: RegExp,
+  regExp: String,
   mask: String,
 });
 
