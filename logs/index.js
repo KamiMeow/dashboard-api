@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 function logging(req, res, next) {
   const now = new Date();
   const day = now.getDay();
@@ -7,15 +9,17 @@ function logging(req, res, next) {
   const minutes = now.getMinutes();
   const seconds = now.getSeconds();
   
-  let data = '-----------------------------------';
-  data += `Date: ${[day, month, year].join('.')}`;
-  data += `Time: ${[hour, minutes, seconds].join(':')}`;
-  data += `Method: ${req.method}`;
-  data += `URL: ${req.url}`;
-  data += `User agent: ${req.get("user-agent")}`
+  let data = '-----------------------------------\n';
+  data += `Date: ${[day, month, year].join('.')}\n`;
+  data += `Time: ${[hour, minutes, seconds].join(':')}\n`;
+  data += `Method: ${req.method}\n`;
+  data += `URL: ${req.url}\n`;
+  data += `User agent: ${req.get("user-agent")}\n`;
   data += '-----------------------------------';
+
   console.log(data);
-  fs.appendFile("server.log", data + "\n", function(){});
+
+  fs.appendFileSync("logs/server.log", data + "\n");
   next();
 };
 
