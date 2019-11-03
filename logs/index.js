@@ -17,8 +17,6 @@ function logging(req, res, next) {
   data += `User agent: ${req.get("user-agent")}\n`;
   data += '-----------------------------------';
 
-  console.log(data);
-
   fs.appendFileSync("logs/server.log", data + "\n");
   next();
 };

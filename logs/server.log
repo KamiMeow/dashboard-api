@@ -5,3 +5,94 @@ Method: GET
 URL: /api/info-types/
 User agent: PostmanRuntime/7.18.0
 -----------------------------------
+-----------------------------------
+Date: 6.10.2019
+Time: 23:33:11
+Method: POST
+URL: /login
+User agent: PostmanRuntime/7.19.0
+-----------------------------------
+-----------------------------------
+Date: 0.10.2019
+Time: 11:27:42
+Method: POST
+URL: /login
+User agent: PostmanRuntime/7.19.0
+-----------------------------------
+-----------------------------------
+Date: 0.10.2019
+Time: 11:28:22
+Method: POST
+URL: /register
+User agent: PostmanRuntime/7.19.0
+-----------------------------------
+-----------------------------------
+Date: 0.10.2019
+Time: 11:28:34
+Method: GET
+URL: /robots.txt
+User agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36
+-----------------------------------
+-----------------------------------
+Date: 0.10.2019
+Time: 11:28:34
+Method: GET
+URL: /
+User agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36
+-----------------------------------
+-----------------------------------
+Date: 0.10.2019
+Time: 11:28:35
+Method: GET
+URL: /favicon.ico
+User agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36
+-----------------------------------
+-----------------------------------
+Date: 0.10.2019
+Time: 11:28:40
+Method: GET
+URL: /login
+User agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36
+-----------------------------------
+-----------------------------------
+Date: 0.10.2019
+Time: 11:28:40
+Method: GET
+URL: /favicon.ico
+User agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36
+-----------------------------------
+-----------------------------------
+Date: 0.10.2019
+Time: 11:28:46
+Method: GET
+URL: /api/user
+User agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36
+-----------------------------------
+-----------------------------------
+Date: 0.10.2019
+Time: 11:28:46
+Method: GET
+URL: /favicon.ico
+User agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36
+-----------------------------------
+-----------------------------------
+Date: 0.10.2019
+Time: 11:36:27
+Method: POST
+URL: /login
+User agent: PostmanRuntime/7.19.0
+-----------------------------------
+-----------------------------------
+Date: 0.10.2019
+Time: 11:45:12
+Method: POST
+URL: /login
+User agent: PostmanRuntime/7.19.0
+-----------------------------------
+-----------------------------------
+Date: 0.10.2019
+Time: 11:46:36
+Method: POST
+URL: /login
+User agent: PostmanRuntime/7.19.0
+-----------------------------------
