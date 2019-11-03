@@ -52,10 +52,10 @@ router.post('/login', auth.optional, (req, res, next) => {
     });
   }
 
-  return passport.authenticate('local', { session: false }, (err, passportUser, info) => {
-    console.log(err);
+  return passport.authenticate('local', { session: false }, (err, passportUser) => {
     if(err) {
-      return next(err);
+      console.log(err.error);
+      return res.send(err);
     }
 
     if(passportUser) {
