@@ -47,7 +47,7 @@ router.post('/login', auth.optional, (req, res, next) => {
   }
 
   if(!password) {
-    return res.status(422).send({
+    return res.status(400).send({
       error: 'password is required',
     });
   }
