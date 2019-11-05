@@ -42,20 +42,20 @@ router.post('/login', auth.optional, (req, res, next) => {
 
   if(!email) {
     return res.status(400).send({
-      error: 'email is required',
+      error: 'Логин является обязательным полем',
     });
   }
 
   if(!password) {
     return res.status(400).send({
-      error: 'password is required',
+      error: 'Пароль является обязательным полем',
     });
   }
 
   return passport.authenticate('local', { session: false }, (err, passportUser) => {
     if(err) {
       console.log(err.error);
-      return res.send(err);
+      return res.status(401).send(err);
     }
 
     if(passportUser) {
