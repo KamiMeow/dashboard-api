@@ -19,22 +19,26 @@ router.post('/register', auth.optional, (req, res) => {
 
   if(!email) {
     return res.status(400).send({
-      error: 'email is required',
+      error: 'Логин является обязательным полем',
     });
   }
 
   if(!password) {
     return res.status(400).sned({
-      error: 'password is required',
+      error: 'Пароль является обязательным полем',
     });
   }
 
-  const finalUser = new Users({ email, password });
+  try {
+    const finalUser = new User({ email, password });
+    finalUser.setPassword(password);
 
-  finalUser.setPassword(password);
-
-  return finalUser.save()
-    .then(() => res.json({ user: finalUser.toAuthJSON() }));
+    return finalUser.save()
+      .then(() => res.json({ user: finalUser.toAuthJSON() }));
+  }
+  catch(e) {
+    res.status(422).send(e);
+  }
 });
 
 router.post('/login', auth.optional, (req, res, next) => {
