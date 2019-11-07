@@ -1,9 +1,10 @@
-const router = require('express').Router();
+const userRouter = require('express').Router();
+const authRouter = require('express').Router();
 const passport = require('passport');
 const auth = require('../router/auth');
 const User = require('./User');
 
-router.get('/profile', auth.required, async (req, res) => {
+userRouter.get('/profile', auth.required, async (req, res) => {
   const { id } = req.payload;
 
   const user = await User.findById(id);
@@ -14,7 +15,7 @@ router.get('/profile', auth.required, async (req, res) => {
   return res.json({ user: user.getProfile() });
 });
 
-router.post('/register', auth.optional, (req, res) => {
+authRouter.post('/register', auth.optional, (req, res) => {
   const { email, password } = req.body;
 
   if(!email) {
@@ -41,7 +42,7 @@ router.post('/register', auth.optional, (req, res) => {
   }
 });
 
-router.post('/login', auth.optional, (req, res, next) => {
+authRouter.post('/login', auth.optional, (req, res, next) => {
   const { email, password } = req.body;
 
   if(!email) {
@@ -73,4 +74,7 @@ router.post('/login', auth.optional, (req, res, next) => {
   })(req, res, next);
 });
 
-module.exports = router;
+module.exports = {
+  authRouter,
+  userRouter,
+};
