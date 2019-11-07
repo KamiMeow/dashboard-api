@@ -49,7 +49,10 @@ userRouter.put('/profile', auth.required, async (req, res) => {
 
   User.updateOne({ _id: user._id }, newUser, (err, _) => {
     if (err) throw err;
-    return res.json({ user: newUser.getProfile() });
+    newUser.getProfile((err, user) => {
+      if (err) return res.sendStatus(400);
+      return res.json({ user });
+    });
   });
 });
 
