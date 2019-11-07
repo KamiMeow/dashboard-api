@@ -3,7 +3,7 @@ const passport = require('passport');
 const auth = require('../router/auth');
 const User = require('./User');
 
-router.get('/api/profile', auth.required, async (req, res) => {
+router.get('/profile', auth.required, async (req, res) => {
   const { id } = req.payload;
 
   const user = await User.findById(id);
