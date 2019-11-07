@@ -12,7 +12,45 @@ userRouter.get('/profile', auth.required, async (req, res) => {
     return res.sendStatus(400);
   }
 
-  return res.json({ user: user.getProfile() });
+  user.getProfile((err, user) => {
+    if (err) return res.sendStatus(400);
+    return res.json({ user });
+  });
+});
+userRouter.put('/profile', auth.required, async (req, res) => {
+  const { id } = req.payload;
+  const user = await User.findById(id);
+  if (!user) {
+    return res.sendStatus(400);
+  }
+
+  let info = req.body.info;
+  if (typeof info === 'string') {
+    info = JSON.parse(info);
+  }
+
+  let contacts = req.body.contacts;
+  if (typeof contacts === 'string') {
+    contacts = JSON.parse(contacts);
+  }
+
+  const newUser = new User({
+    _id: user._id,
+    nickname: req.body.nickname || user.nickname,
+    email: req.body.email || user.email,
+    contacts: contacts || user.contacts,
+    info: info || user.info,
+  });
+
+  const password = req.body.password;
+  if (password) {
+    newUser.setPassword(password);
+  }
+
+  User.updateOne({ _id: user._id }, newUser, (err, _) => {
+    if (err) throw err;
+    return res.json({ user: newUser.getProfile() });
+  });
 });
 
 authRouter.post('/register', auth.optional, (req, res) => {

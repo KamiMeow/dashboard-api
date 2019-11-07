@@ -1,12 +1,20 @@
 const mongoose = require('mongoose');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+const ContactType = require('../ContactType/ContactType');
+const InfoType = require('../InfoType/InfoType');
 
 const UserModel = new mongoose.Schema({
   nickname: { type: String, unique: true, minlength: 3, required: true },
   email: { type: String, unique: true, minlength: 3, required: true, match: [/\S+@\S+\.\S+/, 'is invalid'] },
-  contacts: [{ type: mongoose.Schema.ObjectId, ref: 'ContactType' }],
-  info: [{ type: mongoose.Schema.ObjectId, ref: 'InfoTypes' }],
+  contacts: [{
+    type: { type: mongoose.Schema.ObjectId, ref: 'ContactType', required: true, unique: true },
+    value: { type: String, required: true },
+  }],
+  info: [{
+    type: { type: mongoose.Schema.ObjectId, ref: 'InfoTypes', required: true, unique: true },
+    value: { type: String, required: true },
+  }],
   hash: String,
   salt: String,
 });
@@ -41,13 +49,33 @@ UserModel.methods.toAuthJSON = function() {
     token: this.generateJWT(),
   };
 };
-UserModel.methods.getProfile = function() {
-  return {
+UserModel.methods.getProfile = async function(callback) {
+  const contacts = await getAllById(ContactType, this.contacts);
+  const info = await getAllById(InfoType, this.info);
+
+  await Promise.all(info, contacts);
+
+  return callback(null, {
     _id: this._id,
     nickname: this.nickname,
-    contacts: this.contacts,
     email: this.email,
-    info: this.info,
+    contacts: contacts.map(getCurrentArray(this.contacts)),
+    info: info.map(getCurrentArray(this.info)),
+  });
+};
+
+async function getAllById(className, array) {
+  const ids = array.map(i => i.type);
+  return await className.find({ _id: { $in: ids } });
+};
+function getCurrentArray(array) {
+  return item => {
+    const current = array.find(c => c.type.toString() === item._id.toString());
+    if (!current) return;
+    return {
+      ...item._doc,
+      value: current.value,
+    }
   };
 };
 
