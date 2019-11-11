@@ -1,4 +1,4 @@
-const ContactType = require('./ContactType');
+const Accounts = require('./Accounts');
 const router = require('express').Router();
 
 function searchByValueOrId(req, callback) {
@@ -6,15 +6,15 @@ function searchByValueOrId(req, callback) {
   const value = req.params.value;
 
   if (isByValue) {
-    ContactType.findOne({ 'value': 'phone' }, callback);
+    Accounts.findOne({ 'value': 'phone' }, callback);
   }
   else {
-    ContactType.findById(value, callback);
+    Accounts.findById(value, callback);
   }
 }
 
 router.get('/', (req, res) => {
-  ContactType.find({}, (err, types) => {
+  Accounts.find({}, (err, types) => {
     if (err) return;
     res.send(types);
   });
@@ -29,7 +29,7 @@ router.get('/:value', (req, res) => {
 router.post('/', (req, res) => {
   const { name, value, regExp, mask } = req.body;
 
-  ContactType.create({ name, value, regExp, mask }, (err, type) => {
+  Accounts.create({ name, value, regExp, mask }, (err, type) => {
     if (err) throw err;
     res.status(201).send(type)
   });
@@ -43,7 +43,7 @@ router.put('/:value', (req, res) => {
     const name = req.body.name || type.name;
     const mask = req.body.mask || type.mask;
 
-    ContactType.updateOne({ _id: type._id }, { name, regExp, mask }, { new: true }, (err, newType) => {
+    Accounts.updateOne({ _id: type._id }, { name, regExp, mask }, { new: true }, (err, newType) => {
       if (err) throw err;
       res.send(newType);
     });
@@ -54,7 +54,7 @@ router.delete('/:value', (req, res) => {
   searchByValueOrId(req, (err, type) => {
     if (err) throw err;
 
-    ContactType.findByIdAndDelete(type._id, err => {
+    Accounts.findByIdAndDelete(type._id, err => {
       if (err) throw err;
       res.send(type);
     });

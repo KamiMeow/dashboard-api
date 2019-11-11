@@ -26,8 +26,13 @@ userRouter.put('/profile', auth.required, async (req, res) => {
 
   let info = req.body.info;
   if (typeof info === 'string') {
-    info = JSON.parse(info);
+    info = JSON.parse(info).map(i => ({
+      type: i.type,
+      value: i.value,
+    }));
   }
+
+  console.log(info);
 
   let contacts = req.body.contacts;
   if (typeof contacts === 'string') {
@@ -41,6 +46,8 @@ userRouter.put('/profile', auth.required, async (req, res) => {
     contacts: contacts || user.contacts,
     info: info || user.info,
   });
+
+  console.log(newUser);
 
   const password = req.body.password;
   if (password) {
