@@ -1,5 +1,6 @@
 const router = require('express').Router();
 
+router.use('/statistic-types', require('../StatisticType'));
 router.use('/info-types', require('../InfoType'));
 router.use('/accounts', require('../Accounts'));
 router.use('/github', require('../GitHub'));
