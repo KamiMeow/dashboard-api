@@ -15,9 +15,18 @@ const UserModel = new mongoose.Schema({
     type: { type: mongoose.Schema.ObjectId, ref: 'InfoTypes', required: true, unique: true },
     value: { type: String, required: true },
   }],
+  url: { type: String, unique: true },
   hash: String,
   salt: String,
 });
+
+UserModel.methods.generateLink = function() {
+  const host = 'http://localhost:8080/fs/';
+  const date = (new Date()).valueOf().toString();
+  const random = Math.random().toString();
+  const hash = crypto.createHash('sha1').update(date + random).digest('hex');
+  this.url = host + hash + '/' + this.nickname;
+};
 
 UserModel.methods.setPassword = function(password) {
   this.salt = crypto.randomBytes(16).toString('hex');
@@ -60,6 +69,7 @@ UserModel.methods.getProfile = async function(callback) {
     _id: this._id,
     nickname: this.nickname,
     email: this.email,
+    url: this.url,
     accounts: accounts.map(getCurrentArray(this.accounts)),
     info: info.map(getCurrentArray(this.info)),
   });

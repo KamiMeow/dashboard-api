@@ -62,6 +62,20 @@ userRouter.put('/profile', auth.required, async (req, res) => {
     });
   });
 });
+userRouter.get('/link/regenerate', auth.required, async (req, res) => {
+  const { id } = req.payload;
+
+  const user = await User.findById(id);
+  if(!user) {
+    return res.sendStatus(400);
+  }
+
+  user.generateLink();
+  user.getProfile((err, user) => {
+    if (err) return res.sendStatus(400);
+    return res.json({ user });
+  });
+});
 
 userRouter.post('/accounts/add', auth.required, async (req, res) => {
   const { account, token } = req.body;
@@ -115,6 +129,7 @@ authRouter.post('/register', auth.optional, (req, res) => {
   try {
     const finalUser = new User({ email, password });
     finalUser.setPassword(password);
+    finalUser.generateLink();
 
     return finalUser.save()
       .then(() => res.json({ user: finalUser.toAuthJSON() }));
