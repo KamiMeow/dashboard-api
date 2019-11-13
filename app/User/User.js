@@ -7,7 +7,7 @@ const InfoType = require('../InfoType/InfoType');
 const UserModel = new mongoose.Schema({
   nickname: { type: String, unique: true, minlength: 3, required: true },
   email: { type: String, unique: true, minlength: 3, required: true, match: [/\S+@\S+\.\S+/, 'is invalid'] },
-  contacts: [{
+  accounts: [{
     type: { type: mongoose.Schema.ObjectId, ref: 'Accounts', required: true, unique: true },
     value: { type: String, required: true },
   }],
@@ -50,25 +50,23 @@ UserModel.methods.toAuthJSON = function() {
   };
 };
 UserModel.methods.getProfile = async function(callback) {
-  const contacts = await getAllById(Accounts, this.contacts);
+  console.log(this.accounts);
+  const accounts = await getAllById(Accounts, this.accounts);
   const info = await getAllById(InfoType, this.info);
-  console.log(this.info.map(i => i.type));
-  console.log(info);
 
-  await Promise.all(info, contacts);
+  await Promise.all(info, accounts);
 
   return callback(null, {
     _id: this._id,
     nickname: this.nickname,
     email: this.email,
-    contacts: contacts.map(getCurrentArray(this.contacts)),
+    accounts: accounts.map(getCurrentArray(this.accounts)),
     info: info.map(getCurrentArray(this.info)),
   });
 };
 
 async function getAllById(className, array) {
   const ids = array.map(i => i.type);
-  console.log(ids);
   return await className.find({ _id: { $in: ids } });
 };
 function getCurrentArray(array) {

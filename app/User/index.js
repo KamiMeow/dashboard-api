@@ -34,16 +34,16 @@ userRouter.put('/profile', auth.required, async (req, res) => {
 
   console.log(info);
 
-  let contacts = req.body.contacts;
-  if (typeof contacts === 'string') {
-    contacts = JSON.parse(contacts);
+  let accounts = req.body.accounts;
+  if (typeof accounts === 'string') {
+    accounts = JSON.parse(accounts);
   }
 
   const newUser = new User({
     _id: user._id,
     nickname: req.body.nickname || user.nickname,
     email: req.body.email || user.email,
-    contacts: contacts || user.contacts,
+    accounts: accounts || user.accounts,
     info: info || user.info,
   });
 
@@ -54,13 +54,47 @@ userRouter.put('/profile', auth.required, async (req, res) => {
     newUser.setPassword(password);
   }
 
-  User.updateOne({ _id: user._id }, newUser, (err, _) => {
+  User.updateOne({ _id: user._id }, newUser, (err) => {
     if (err) throw err;
     newUser.getProfile((err, user) => {
       if (err) return res.sendStatus(400);
       return res.json({ user });
     });
   });
+});
+
+userRouter.post('/accounts/add', auth.required, async (req, res) => {
+  const { account, token } = req.body;
+  const { id } = req.payload;
+
+  const user = await User.findById(id);
+  console.log(user);
+  if (!user) {
+    return res.sendStatus(400);
+  }
+
+  // const accounts = user.accounts.filter(a => a.type !== account).slice(0);
+  const accounts = [];
+  console.log({
+    type: account,
+    value: token,
+  });
+  accounts.push({
+    type: account,
+    value: token,
+  });
+
+
+  console.log(accounts);
+
+  User.updateOne({ _id: user._id }, { accounts }, err => {
+    if (err) throw err;
+
+    user.getProfile((err, user) => {
+      if (err) return res.sendStatus(400);
+      return res.json({ user });
+    });
+  })
 });
 
 authRouter.post('/register', auth.optional, (req, res) => {
