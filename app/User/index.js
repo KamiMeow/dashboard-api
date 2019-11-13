@@ -32,8 +32,6 @@ userRouter.put('/profile', auth.required, async (req, res) => {
     }));
   }
 
-  console.log(info);
-
   let accounts = req.body.accounts;
   if (typeof accounts === 'string') {
     accounts = JSON.parse(accounts);
@@ -43,11 +41,10 @@ userRouter.put('/profile', auth.required, async (req, res) => {
     _id: user._id,
     nickname: req.body.nickname || user.nickname,
     email: req.body.email || user.email,
+    url: req.body.url || user.url,
     accounts: accounts || user.accounts,
     info: info || user.info,
   });
-
-  console.log(newUser);
 
   const password = req.body.password;
   if (password) {
@@ -82,24 +79,15 @@ userRouter.post('/accounts/add', auth.required, async (req, res) => {
   const { id } = req.payload;
 
   const user = await User.findById(id);
-  console.log(user);
   if (!user) {
     return res.sendStatus(400);
   }
 
-  // const accounts = user.accounts.filter(a => a.type !== account).slice(0);
   const accounts = [];
-  console.log({
-    type: account,
-    value: token,
-  });
   accounts.push({
     type: account,
     value: token,
   });
-
-
-  console.log(accounts);
 
   User.updateOne({ _id: user._id }, { accounts }, err => {
     if (err) throw err;

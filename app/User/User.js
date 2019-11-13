@@ -51,10 +51,12 @@ UserModel.methods.generateJWT = function() {
 }
 
 UserModel.methods.toAuthJSON = function() {
+  console.log(this)
   return {
     _id: this._id,
-    email: this.email,
     nickname: this.nickname,
+    email: this.email,
+    url: this.url,
     token: this.generateJWT(),
   };
 };
