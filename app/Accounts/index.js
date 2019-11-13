@@ -27,9 +27,9 @@ router.get('/:value', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  const { name, value, regExp, mask } = req.body;
+  const { name, value, link, icon } = req.body;
 
-  Accounts.create({ name, value, regExp, mask }, (err, type) => {
+  Accounts.create({ name, value, link, icon }, (err, type) => {
     if (err) throw err;
     res.status(201).send(type)
   });
@@ -43,7 +43,7 @@ router.put('/:value', (req, res) => {
     const name = req.body.name || type.name;
     const mask = req.body.mask || type.mask;
 
-    Accounts.updateOne({ _id: type._id }, { name, regExp, mask }, { new: true }, (err, newType) => {
+    Accounts.updateOne({ _id: type._id }, { name, link, icon }, { new: true }, (err, newType) => {
       if (err) throw err;
       res.send(newType);
     });
