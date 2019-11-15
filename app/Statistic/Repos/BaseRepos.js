@@ -6,6 +6,12 @@ function summReduceBy(array, key, startValue = 0) {
 function getAverage(array, key) {
   return summReduceBy(array, key) / array.length;
 };
+function createNameValueArray(array, key) {
+  return array.map(item => ({
+    name: item.name,
+    [key]: item[key],
+  }));
+}
 
 class BaseRepos {
   constructor(token, {
@@ -63,12 +69,15 @@ class BaseRepos {
     };
   }
 
-  reposDAL(res) {
+  parseRepos(res) {
     return res;
+  }
+  parseDate(date) {
+    return date;
   }
 
   async getReposData(url) {
-    const res = this.reposDAL(await this.get(url));
+    const res = this.parseRepos(await this.get(url));
 
     const watchers = this.getCharDataBy(res, 'watchers');
     const issues = this.getCharDataBy(res, 'issues');
@@ -79,6 +88,9 @@ class BaseRepos {
     const reposCount = this.getCountRepos(res);
     const names = this.getAllReposName(res);
 
+    const createdDates = this.createNameDateArray(res, 'createdDate');
+    const pushedDates = this.createNameDateArray(res, 'pushedDate');
+
     return {
       topUsedLanguage,
       reposCount,
@@ -87,6 +99,9 @@ class BaseRepos {
       stars,
       sizes,
       names,
+
+      createdDates,
+      pushedDates,
     };
   }
 
@@ -105,10 +120,7 @@ class BaseRepos {
   }
 
   getCharDataBy(res, key) {
-    const values = res.map(repo => ({
-      name: repo.name,
-      [key]: repo[key],
-    }));
+    const values = createNameValueArray(res, key)
 
     return {
       summ: summReduceBy(values, key).toFixed(2),
@@ -122,6 +134,14 @@ class BaseRepos {
       return res.length;
     }
     return 0;
+  }
+
+  createNameDateArray(res, key) {
+    const dates = createNameValueArray(res, key);
+    return dates.map(d => ({
+      date: this.parseDate(d[key]),
+      name: d.name,
+    }))
   }
 
   getAllReposName(res) {
