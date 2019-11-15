@@ -9,7 +9,7 @@ function getAverage(array, key) {
 function createNameValueArray(array, key) {
   return array.map(item => ({
     name: item.name,
-    [key]: item[key],
+    value: item[key],
   }));
 }
 
@@ -108,10 +108,10 @@ class BaseRepos {
   createTopUsedLanguage(res) {
     const languages = [...new Set(res.map(repo => repo.language))];
     const top = languages.map(lang => ({
-      count: res.filter(repo => repo.language === lang).length,
-      language: lang || 'Нe определён',
+      value: res.filter(repo => repo.language === lang).length,
+      name: lang || 'Нe определён',
     }))
-      .sort((p, n) => p.count < n.count ? 1 : -1);
+      .sort((p, n) => p.value < n.value ? 1 : -1);
 
     return {
       count: languages.filter(l => !!l).length,
@@ -125,7 +125,7 @@ class BaseRepos {
     return {
       summ: summReduceBy(values, key).toFixed(2),
       average: getAverage(values, key).toFixed(2),
-      [key + 's']: values,
+      values,
     };
   }
 
@@ -139,7 +139,7 @@ class BaseRepos {
   createNameDateArray(res, key) {
     const dates = createNameValueArray(res, key);
     return dates.map(d => ({
-      date: this.parseDate(d[key]),
+      value: this.parseDate(d.value),
       name: d.name,
     }))
   }

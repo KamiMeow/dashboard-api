@@ -26,10 +26,16 @@ router.get('/refresh', auth.required, async (req, res) => {
 
 router.get('/', auth.required, async (req, res) => {
   const { id } = req.payload;
+  const user = await User.findById(id);
+
   const currentStatistics = await Statistic.find({
     user: id,
   });
-  res.status(200).send(currentStatistics);
+
+  res.status(200).send({
+    data: currentStatistics,
+    url: user.url,
+  });
 });
 
 module.exports = router;
