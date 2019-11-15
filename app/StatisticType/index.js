@@ -8,7 +8,6 @@ router.get('/', (req, res) => {
   });
 });
 router.get('/:id', (req, res) => {
-  console.log(req.params.id);
   StatisticType.findById(req.params.id, (err, type) => {
     if (err) throw err;
     res.send(type);

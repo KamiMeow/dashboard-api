@@ -61,7 +61,6 @@ UserModel.methods.toAuthJSON = function() {
   };
 };
 UserModel.methods.getProfile = async function(callback) {
-  console.log(this.accounts);
   const accounts = await getAllById(Accounts, this.accounts);
   const info = await getAllById(InfoType, this.info);
 
