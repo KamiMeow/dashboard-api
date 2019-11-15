@@ -1,10 +1,10 @@
 const https = require('https');
 
-function summReduceBy(array, key, startValue = 0) {
-  return array.reduce((summ, current) => summ + +current[key], startValue);
+function summReduceBy(array, startValue = 0) {
+  return array.reduce((summ, current) => summ + +current.value, startValue);
 };
-function getAverage(array, key) {
-  return summReduceBy(array, key) / array.length;
+function getAverage(array) {
+  return summReduceBy(array) / array.length;
 };
 function createNameValueArray(array, key) {
   return array.map(item => ({
@@ -92,16 +92,52 @@ class BaseRepos {
     const pushedDates = this.createNameDateArray(res, 'pushedDate');
 
     return {
-      topUsedLanguage,
-      reposCount,
-      watchers,
-      issues,
-      stars,
-      sizes,
-      names,
-
-      createdDates,
-      pushedDates,
+      counters: [
+        {
+          title: 'Количество репозиториев',
+          value: reposCount,
+        }
+      ],
+      chartsWithData: [
+        {
+          title: 'Отслеживаний',
+          value: watchers,
+        },
+        {
+          title: 'Issues',
+          value: issues,
+        },
+        {
+          title: 'Звёзды',
+          value: stars,
+        },
+        {
+          title: 'Размеры',
+          value: sizes,
+        }
+      ],
+      dates: [
+        {
+          title: 'Дата создания репозитория',
+          value: createdDates,
+        },
+        {
+          title: 'Дата последнего push',
+          value: pushedDates,
+        }
+      ],
+      charts: [
+        {
+          title: 'Названия репозиториев',
+          value: names,
+        }
+      ],
+      tops: [
+        {
+          title: 'Самые часто использованные языки',
+          value: topUsedLanguage,
+        }
+      ],
     };
   }
 
@@ -123,8 +159,8 @@ class BaseRepos {
     const values = createNameValueArray(res, key)
 
     return {
-      summ: summReduceBy(values, key).toFixed(2),
-      average: getAverage(values, key).toFixed(2),
+      summ: summReduceBy(values).toFixed(2),
+      average: getAverage(values).toFixed(2),
       values,
     };
   }
