@@ -98,7 +98,7 @@ class BaseRepos {
           value: reposCount,
         }
       ],
-      chartsWithData: [
+      columnChart: [
         {
           title: 'Отслеживаний',
           value: watchers,
