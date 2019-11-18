@@ -94,46 +94,55 @@ class BaseRepos {
     return {
       counters: [
         {
+          id: 'repos',
           title: 'Количество репозиториев',
           value: reposCount,
         }
       ],
       columnChart: [
         {
+          id: 'watchers',
           title: 'Отслеживаний',
           value: watchers,
         },
         {
+          id: 'issues',
           title: 'Issues',
           value: issues,
         },
         {
+          id: 'stars',
           title: 'Звёзды',
           value: stars,
         },
         {
+          id: 'sizes',
           title: 'Размеры',
           value: sizes,
         }
       ],
       dates: [
         {
+          id: 'createdDates',
           title: 'Дата создания репозитория',
           value: createdDates,
         },
         {
+          id: 'pushedDates',
           title: 'Дата последнего push',
           value: pushedDates,
         }
       ],
       charts: [
         {
+          id: 'names',
           title: 'Названия репозиториев',
           value: names,
         }
       ],
-      tops: [
+      pieChart: [
         {
+          id: 'topUsedLanguage',
           title: 'Самые часто использованные языки',
           value: topUsedLanguage,
         }
