@@ -92,7 +92,7 @@ class BaseRepos {
     const pushedDates = this.createNameDateArray(res, 'pushedDate');
 
     return {
-      counters: [
+      counter: [
         {
           id: 'repos',
           title: 'Количество репозиториев',
