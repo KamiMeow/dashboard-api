@@ -64,6 +64,26 @@ router.post('/save', auth.required, (req, res) => {
   });
 });
 
+router.get('/dashboard', auth.required, (req, res) => {
+  const { id } = req.payload;
+
+  Dashboard.find({ user: id }, async (err, dashboard) => {
+    if (err) return;
+
+    let ids = dashboard.map(s => s.statistic);
+    const statistics = await Statistic.find({ _id: { $in: ids } });
+    await Promise.all(statistics);
+
+    const types = await StatisticType.find();
+    statistics.forEach(stat => {
+      const type = types.find(t => t._id.toString() === stat.type.toString());
+      stat.type = type;
+    });
+    
+    res.status(200).send(statistics);
+  });
+});
+
 router.get('/', auth.required, async (req, res) => {
   const { id } = req.payload;
   const user = await User.findById(id);
