@@ -25,6 +25,7 @@ UserModel.methods.generateLink = function() {
   const date = (new Date()).valueOf().toString();
   const random = Math.random().toString();
   const hash = crypto.createHash('sha1').update(date + random).digest('hex');
+  this.origin = hash;
   this.url = host + hash + '/' + this.nickname;
 };
 
