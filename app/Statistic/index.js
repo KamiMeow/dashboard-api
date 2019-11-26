@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const Repos = require('./Repos');
 const StatisticType = require('../StatisticType/StatisticType');
+const Dashboard = require('../Dashboard/Dashboard');
 const Statistic = require('./Statistic');
 const User = require('../User/User');
 const auth = require('../router/auth');
@@ -48,6 +49,19 @@ router.get('/refresh', auth.required, async (req, res) => {
         res.status(200).send(await getStatistic(id));
       })
   })
+});
+
+router.post('/save', auth.required, (req, res) => {
+  const { id: userId } = req.payload;
+  const { id } = req.body;
+
+  Dashboard.create({
+    statistic: id,
+    user: userId,
+  }, (err, dashboard) => {
+    if (err) throw err;
+    res.status(201).send(dashboard);
+  });
 });
 
 router.get('/', auth.required, async (req, res) => {
