@@ -35,6 +35,9 @@ app.use(logging);
 app.use(router.use('/api', require('./router')));
 app.use(router.use('/', require('./User').authRouter));
 
+app.use((err, req, res, next) => {
+  console.log(err);
+});
 app.use((req, res, next) => {
   res.status(500);
 

@@ -108,6 +108,7 @@ router.get('/user-dashboard', auth.optional, async (req, res) => {
 router.get('/', auth.required, async (req, res) => {
   const { id } = req.payload;
   const user = await User.findById(id);
+  console.log(user);
 
   res.status(200).send({
     data: await getStatistic(id),

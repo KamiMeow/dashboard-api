@@ -8,12 +8,12 @@ const UserModel = new mongoose.Schema({
   nickname: { type: String, unique: true, minlength: 3, required: true },
   email: { type: String, unique: true, minlength: 3, required: true, match: [/\S+@\S+\.\S+/, 'is invalid'] },
   accounts: [{
-    type: { type: mongoose.Schema.ObjectId, ref: 'Accounts', required: true, unique: true },
-    value: { type: String, required: true },
+    type: { type: mongoose.Schema.ObjectId, ref: 'Accounts', unique: true },
+    value: { type: String },
   }],
   info: [{
-    type: { type: mongoose.Schema.ObjectId, ref: 'InfoTypes', required: true, unique: true },
-    value: { type: String, required: true },
+    type: { type: mongoose.Schema.ObjectId, ref: 'InfoTypes', unique: true },
+    value: { type: String },
   }],
   url: { type: String, unique: true },
   hash: String,

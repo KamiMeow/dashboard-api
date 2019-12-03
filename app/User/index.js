@@ -68,9 +68,13 @@ userRouter.get('/link/regenerate', auth.required, async (req, res) => {
   }
 
   user.generateLink();
-  user.getProfile((err, user) => {
-    if (err) return res.sendStatus(400);
-    return res.json({ user });
+  User.updateOne({ _id: id }, user, err => {
+    if (err) throw err;
+
+    user.getProfile((err, user) => {
+      if (err) return res.sendStatus(400);
+      return res.json({ user });
+    });
   });
 });
 
@@ -99,8 +103,8 @@ userRouter.post('/accounts/add', auth.required, async (req, res) => {
   })
 });
 
-authRouter.post('/register', auth.optional, (req, res) => {
-  const { email, password } = req.body;
+authRouter.post('/register', auth.optional, (req, res, next) => {
+  const { email, password, nickname } = req.body;
 
   if(!email) {
     return res.status(400).send({
@@ -114,15 +118,22 @@ authRouter.post('/register', auth.optional, (req, res) => {
     });
   }
 
-  try {
-    const finalUser = new User({ email, password });
-    finalUser.setPassword(password);
-    finalUser.generateLink();
+  if(!nickname) {
+    return res.status(400).sned({
+      error: 'Имя является обязательным полем',
+    });
+  }
 
-    return finalUser.save()
-      .then(() => res.json({ user: finalUser.toAuthJSON() }));
+  try {
+    const finalUser = new User({ email, password, nickname, accounts: [], info: [], });
+    // finalUser.setPassword(password);
+    // finalUser.generateLink();
+
+    // return finalUser.save()
+    //   .then(() => res.json({ user: finalUser.toAuthJSON() }));
   }
   catch(e) {
+    next(e);
     res.status(422).send(e);
   }
 });
