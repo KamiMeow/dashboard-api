@@ -41,6 +41,7 @@ async function getStatistic(userId) {
 
 router.get('/refresh', auth.required, async (req, res) => {
   const { id } = req.payload;
+  const user = await User.findById(id);
 
   user.getProfile(async (err, { accounts }) => {
     data = accounts.map(account => currentDataFromAPI(account, id));
@@ -58,6 +59,19 @@ router.post('/save', auth.required, (req, res) => {
   Dashboard.create({
     statistic: id,
     user: userId,
+  }, (err, dashboard) => {
+    if (err) throw err;
+    res.status(201).send(dashboard);
+  });
+});
+
+router.post('/delete', auth.required, (req, res) => {
+  const { id: userId } = req.payload;
+  const { id } = req.body;
+
+  Dashboard.deleteMany({
+    user: userId,
+    statistic: id
   }, (err, dashboard) => {
     if (err) throw err;
     res.status(201).send(dashboard);
