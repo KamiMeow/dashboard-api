@@ -1,6 +1,7 @@
 const userRouter = require('express').Router();
 const authRouter = require('express').Router();
 const passport = require('passport');
+const multer = require('multer');
 const auth = require('../router/auth');
 const User = require('./User');
 
@@ -101,6 +102,80 @@ userRouter.post('/accounts/add', auth.required, async (req, res) => {
       return res.json({ user });
     });
   })
+});
+
+
+// const storageConfig = multer.diskStorage({
+//   destination: (req, file, cb) =>{
+//       cb(null, "uploads");
+//   },
+//   filename: (req, file, cb) =>{
+//       cb(null, file.originalname);
+//   }
+// });
+
+const upload = multer({
+  // storage: storageConfig,
+  dest: "public"
+});
+
+userRouter.post('/upload-avatar', upload.single("filedata"), (req, res) => {
+  let filedata = req.file;
+  console.log(filedata);
+  if(!filedata)
+      res.status(400).send("Ошибка при загрузке файла");
+  else
+      res.status(200).send("Файл загружен");
+
+  // const form = new multiparty.Form();
+  // const uploadFile = {
+  //   uploadFile: '',
+  //   type: '',
+  //   size: 0,
+  // };
+  // const maxSize = 2 * 1024 * 1024;
+  // const supportMimeTypes = ['image/jpg', 'image/jpeg', 'image/png'];
+  // let errors = [];
+
+  // form.on('error', err => {
+  //   if (fs.existsSync(uploadFile.path)) {
+  //     fs.unlinkSync(uploadFile.path);
+  //     console.log('error');
+  //   }
+  // });
+
+  // form.on('close', () => {
+  //     if (!errors.length) {
+  //     res.sendStatus(200).send('Файл загружен');
+  //   }
+
+  //   if (fs.existsSync(uploadFile.path)) {
+  //     fs.unlinkSync(uploadFile.path)
+  //   }
+  //   res.sendStatus(400).send('Неверное изображение');
+  // });
+  
+  // form.on('part', part => {
+  //   uploadFile.size = part.byteCount;
+  //   uploadFile.type = part.headers['content-type'];
+  //   uploadFile.path = '../../uploads/' + part.filename;
+  //   console.log(uploadFile);
+
+  //   if (uploadFile.size > maxSize) {
+  //     errors.push(`Размер файла ${uploadFile.size}. Размер должен быть не больше ${maxSize / 1024 /1024} МБ`);
+  //   }
+  //   if (supportMimeTypes.includes(uploadFile.type)) {
+  //     errors.push('Не поддерживаемый тип файла');
+  //   }
+
+  //   if (!errors.length) {
+  //     const out = fs.createWriteStream(uploadFile.path);
+  //     return part.pipe(out);
+  //   }
+  //   part.resume();
+  // });
+
+  // form.parse(req);
 });
 
 authRouter.post('/register', auth.optional, (req, res, next) => {

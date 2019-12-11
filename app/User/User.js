@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
-const crypto = require('crypto');
+const gravatar = require('gravatar');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const Accounts = require('../Accounts/Accounts');
 const InfoType = require('../InfoType/InfoType');
 
@@ -52,12 +53,13 @@ UserModel.methods.generateJWT = function() {
 }
 
 UserModel.methods.toAuthJSON = function() {
-  console.log(this)
+  const avatar = gravatar.url(this.email, { s: 200 });
   return {
     _id: this._id,
     nickname: this.nickname,
     email: this.email,
     url: this.url,
+    avatar,
     token: this.generateJWT(),
   };
 };
@@ -67,11 +69,14 @@ UserModel.methods.getProfile = async function(callback) {
 
   await Promise.all(info, accounts);
 
+  const avatar = gravatar.url(this.email, { s: 200 });
+
   return callback(null, {
     _id: this._id,
     nickname: this.nickname,
     email: this.email,
     url: this.url,
+    avatar,
     accounts: accounts.map(getCurrentArray(this.accounts)),
     info: info.map(getCurrentArray(this.info)),
   });

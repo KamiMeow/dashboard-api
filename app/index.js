@@ -2,7 +2,6 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const express = require('express');
 const morgan = require('morgan');
-const cors = require('cors');
 
 const config = require('../config');
 const db = require('../config/db');
@@ -27,7 +26,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(express.static(__dirname + '/public'));
+app.use(express.static('/public'));
 app.use(session({ secret: 'passport-tutorial', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
 
 require('../config/passport');
