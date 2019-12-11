@@ -201,15 +201,19 @@ authRouter.post('/register', auth.optional, (req, res, next) => {
 
   try {
     const finalUser = new User({ email, password, nickname, accounts: [], info: [], });
-    // finalUser.setPassword(password);
-    // finalUser.generateLink();
+    finalUser.setPassword(password);
+    finalUser.generateLink();
 
-    // return finalUser.save()
-    //   .then(() => res.json({ user: finalUser.toAuthJSON() }));
+    return finalUser.save()
+      .then(() => res.json({ user: finalUser.toAuthJSON() }))
+      .catch(e => {
+        console.error(e);
+        res.status(400).send('Да');
+      })
   }
   catch(e) {
     next(e);
-    res.status(422).send(e);
+    res.status(400).send(e);
   }
 });
 

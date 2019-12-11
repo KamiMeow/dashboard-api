@@ -10,9 +10,12 @@ async function currentDataFromAPI(account, userId) {
   const types = await StatisticType.find({});
   const data = await Repos[account.name](account.value);
 
-  Statistic.deleteMany({ user: userId });
+  await Statistic.deleteMany({ user: userId });
+
   Object.values(types).forEach(type => {
     const charts = data[type.type];
+    console.log(type);
+    console.log(charts);
     if (!charts) return;
     charts.forEach(data => {
       Statistic.create({
@@ -47,6 +50,7 @@ router.get('/refresh', auth.required, async (req, res) => {
     data = accounts.map(account => currentDataFromAPI(account, id));
     await Promise.all(data)
       .then(async data => {
+        console.log(data);
         res.status(200).send(await getStatistic(id));
       })
   })
