@@ -11,8 +11,10 @@ const UserModel = new mongoose.Schema({
   nickname: { type: String, unique: true, minlength: 3, required: true },
   email: { type: String, unique: true, minlength: 3, required: true, match: [/\S+@\S+\.\S+/, 'is invalid'] },
   url: { type: String, unique: true },
+  origin: String,
   hash: String,
   salt: String,
+  url: String,
 });
 
 UserModel.methods.generateLink = function() {
