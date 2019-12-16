@@ -97,6 +97,6 @@ function getCurrentArray(array, value) {
   };
 };
 
-mongoose.model('User', UserModel);
+mongoose.model('NewUser', UserModel);
 
-module.exports = mongoose.model('User');
+module.exports = mongoose.model('NewUser');
