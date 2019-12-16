@@ -49,10 +49,7 @@ async function getStatistic(userId) {
 async function userDashboard(req, res) {
   const { token } = req.query;
   const users = await User.find();
-  console.log(users);
   const user = await User.findOne({ origin: token });
-  console.log(token);
-  console.log(user);
 
   Dashboard.find({ user: user._id }, async (err, dashboard) => {
     if (err) return;
