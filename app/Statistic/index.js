@@ -12,19 +12,22 @@ async function currentDataFromAPI(account, userId) {
 
   await Statistic.deleteMany({ user: userId });
 
-  Object.values(types).forEach(type => {
+  const keysPromise = Object.values(types).map(async type => {
     const charts = data[type.type];
-    console.log(type);
-    console.log(charts);
+
     if (!charts) return;
-    charts.forEach(data => {
-      Statistic.create({
+    const promiseCharts = charts.map(async data => {
+      return await Statistic.create({
         user: userId,
         type: type._id,
         ...data, 
       });
-    })
-  })
+    });
+
+    return await Promise.all(promiseCharts);
+  });
+
+  await Promise.all(keysPromise);
   data.origin = account.name;
   return data;
 };
@@ -50,7 +53,6 @@ router.get('/refresh', auth.required, async (req, res) => {
     data = accounts.map(account => currentDataFromAPI(account, id));
     await Promise.all(data)
       .then(async data => {
-        console.log(data);
         res.status(200).send(await getStatistic(id));
       })
   })
@@ -126,7 +128,6 @@ router.get('/user-dashboard', auth.optional, async (req, res) => {
 router.get('/', auth.required, async (req, res) => {
   const { id } = req.payload;
   const user = await User.findById(id);
-  console.log(user);
 
   res.status(200).send({
     data: await getStatistic(id),
