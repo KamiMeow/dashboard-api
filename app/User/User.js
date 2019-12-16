@@ -63,11 +63,8 @@ UserModel.methods.getProfile = async function(callback) {
   const accountUsers = await AccountUser.find({ user: this._id });
   const infoUsers = await InfoUser.find({ user: this._id });
 
-  console.log(accountUsers);
-  console.log(infoUsers);
-
   const accounts = await getAllById(Accounts, accountUsers, 'account');
-  const info = await getAllById(InfoType, infoUsers, 'info');
+  const info = await getAllById(InfoType, infoUsers, 'type');
 
   await Promise.all(info, accounts);
 
@@ -80,7 +77,7 @@ UserModel.methods.getProfile = async function(callback) {
     url: this.url,
     avatar,
     accounts: accounts.map(getCurrentArray(accountUsers, 'account')),
-    info: info.map(getCurrentArray(infoUsers, 'info')),
+    info: info.map(getCurrentArray(infoUsers, 'type')),
   });
 };
 
