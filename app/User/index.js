@@ -228,7 +228,9 @@ authRouter.post('/register', auth.optional, (req, res, next) => {
       .then(() => res.json({ user: finalUser.toAuthJSON() }))
       .catch(e => {
         console.error(e);
-        res.status(400).send(e.keyPattern);
+        res.status(400).send({
+          error: e.keyPattern,
+        });
       })
   }
   catch(e) {
