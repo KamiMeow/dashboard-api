@@ -4,18 +4,12 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const Accounts = require('../Accounts/Accounts');
 const InfoType = require('../InfoType/InfoType');
+const AccountUser = require('./AccountUser');
+const InfoUser = require('./InfoUser');
 
 const UserModel = new mongoose.Schema({
   nickname: { type: String, unique: true, minlength: 3, required: true },
   email: { type: String, unique: true, minlength: 3, required: true, match: [/\S+@\S+\.\S+/, 'is invalid'] },
-  accounts: [{
-    type: { type: mongoose.Schema.ObjectId, ref: 'Accounts', unique: true },
-    value: { type: String },
-  }],
-  info: [{
-    type: { type: mongoose.Schema.ObjectId, ref: 'InfoTypes', unique: true },
-    value: { type: String },
-  }],
   url: { type: String, unique: true },
   hash: String,
   salt: String,
@@ -64,8 +58,14 @@ UserModel.methods.toAuthJSON = function() {
   };
 };
 UserModel.methods.getProfile = async function(callback) {
-  const accounts = await getAllById(Accounts, this.accounts);
-  const info = await getAllById(InfoType, this.info);
+  const accountUsers = await AccountUser.find({ user: this._id });
+  const infoUsers = await InfoUser.find({ user: this._id });
+
+  console.log(accountUsers);
+  console.log(infoUsers);
+
+  const accounts = await getAllById(Accounts, accountUsers, 'account');
+  const info = await getAllById(InfoType, infoUsers, 'info');
 
   await Promise.all(info, accounts);
 
@@ -77,18 +77,18 @@ UserModel.methods.getProfile = async function(callback) {
     email: this.email,
     url: this.url,
     avatar,
-    accounts: accounts.map(getCurrentArray(this.accounts)),
-    info: info.map(getCurrentArray(this.info)),
+    accounts: accounts.map(getCurrentArray(accountUsers, 'account')),
+    info: info.map(getCurrentArray(infoUsers, 'info')),
   });
 };
 
-async function getAllById(className, array) {
-  const ids = array.map(i => i.type);
+async function getAllById(className, array, value) {
+  const ids = array.map(i => i[value]);
   return await className.find({ _id: { $in: ids } });
 };
-function getCurrentArray(array) {
+function getCurrentArray(array, value) {
   return item => {
-    const current = array.find(c => c.type.toString() === item._id.toString());
+    const current = array.find(c => c[value].toString() === item._id.toString());
     if (!current) return;
     return {
       ...item._doc,

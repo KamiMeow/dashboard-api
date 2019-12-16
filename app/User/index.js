@@ -4,6 +4,8 @@ const passport = require('passport');
 const multer = require('multer');
 const auth = require('../router/auth');
 const User = require('./User');
+const AccountUser = require('./AccountUser');
+const InfoUser = require('./InfoUser');
 
 userRouter.get('/profile', auth.required, async (req, res) => {
   const { id } = req.payload;
@@ -27,24 +29,41 @@ userRouter.put('/profile', auth.required, async (req, res) => {
 
   let info = req.body.info;
   if (typeof info === 'string') {
-    info = JSON.parse(info).map(i => ({
-      type: i.type,
-      value: i.value,
-    }));
+    info = JSON.parse(info).forEach(async i => {
+      const type = {
+        value: i.value,
+        type: i.type,
+        user: id,
+      };
+
+      await InfoUser.deleteMany({
+        type: i.type,
+        user: id,
+      });
+
+      InfoUser.create(type);
+    });
   }
 
-  let accounts = req.body.accounts;
-  if (typeof accounts === 'string') {
-    accounts = JSON.parse(accounts);
-  }
+  // let accounts = req.body.accounts;
+  // if (typeof accounts === 'string') {
+  //   accounts = JSON.parse(accounts).forEach(account => {
+  //     cons
+
+  //     await InfoUser.deleteMany({
+  //       type: i.type,
+  //       user: id,
+  //     });
+
+  //     InfoUser.create(type);
+  //   });
+  // }
 
   const newUser = new User({
     _id: user._id,
     nickname: req.body.nickname || user.nickname,
     email: req.body.email || user.email,
     url: req.body.url || user.url,
-    accounts: accounts || user.accounts,
-    info: info || user.info,
   });
 
   const password = req.body.password;
@@ -86,22 +105,23 @@ userRouter.post('/accounts/add', auth.required, async (req, res) => {
   const user = await User.findById(id);
   if (!user) {
     return res.sendStatus(400);
-  }
+  };
 
-  const accounts = [];
-  accounts.push({
-    type: account,
+  const newAccount = {
     value: token,
+    user: id,
+    account,
+  };
+
+  await AccountUser.deleteMany({
+    account: account,
+    user: id,
   });
 
-  User.updateOne({ _id: user._id }, { accounts }, err => {
-    if (err) throw err;
-
-    user.getProfile((err, user) => {
-      if (err) return res.sendStatus(400);
-      return res.json({ user });
-    });
-  })
+  AccountUser.create(newAccount, err => {
+    if (err) return res.sendStatus(400);
+    return res.json({ newAccount });
+  });
 });
 
 
