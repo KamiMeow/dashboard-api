@@ -32,6 +32,7 @@ app.use(session({ secret: 'passport-tutorial', cookie: { maxAge: 60000 }, resave
 require('../config/passport');
 app.use(logging);
 app.use(router.use('/api', require('./router')));
+app.use(router.use('/statistic', require('./Statistic').anonimRouter));
 app.use(router.use('/', require('./User').authRouter));
 
 app.use((err, req, res, next) => {
