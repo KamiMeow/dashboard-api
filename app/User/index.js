@@ -208,13 +208,13 @@ authRouter.post('/register', auth.optional, (req, res, next) => {
   }
 
   if(!password) {
-    return res.status(400).sned({
+    return res.status(400).send({
       error: 'Пароль является обязательным полем',
     });
   }
 
   if(!nickname) {
-    return res.status(400).sned({
+    return res.status(400).send({
       error: 'Имя является обязательным полем',
     });
   }
