@@ -1,0 +1,11 @@
+language: node_js
+
+node_js:
+  - node
+
+script:
+  - npm eslint
+  - npm test
+
+notifications:
+  email: true
