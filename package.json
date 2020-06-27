@@ -6,7 +6,8 @@
   "scripts": {
     "debug": "node --inspect --exec babel-node server.js",
     "server": "nodemon --exec babel server.js",
-    "eslint": "eslint ."
+    "eslint": "eslint .",
+    "test": "jest"
   },
   "repository": {
     "type": "git",

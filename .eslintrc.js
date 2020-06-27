@@ -1,12 +1,15 @@
 module.exports = {
   env: {
     node: true,
+    jest: true,
   },
   extends: [
     'airbnb-base',
+    'plugin:jest/recommended',
   ],
   plugins: [
     'babel',
+    'jest',
   ],
   parser: 'babel-eslint',
   rules: {
