@@ -4,8 +4,9 @@
   "description": "REST API on Node.js",
   "main": "index.js",
   "scripts": {
-    "debug": "node --inspect --exec babel-node server.js",
-    "server": "nodemon --exec babel server.js",
+    "debug": "npm run development && node --inspect --exec babel-node server.js",
+    "server": "npm run development && nodemon --exec babel-node server.js",
+    "development": "set NODE_ENV=development",
     "eslint": "eslint .",
     "test": "jest"
   },
@@ -34,7 +35,8 @@
     "eslint-plugin-jest": "^23.17.1",
     "jest": "^26.1.0",
     "jest-cli": "^26.1.0",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "supertest": "^4.0.2"
   },
   "dependencies": {
     "express": "^4.17.1"
