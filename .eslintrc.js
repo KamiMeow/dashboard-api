@@ -17,7 +17,7 @@ module.exports = {
     'class-methods-use-this': 'warn',
     'jest/no-disabled-tests': 'off',
     'consistent-return': 'off',
-    'arrow-parens': 'warn',
+    'arrow-parens': 'off',
     'no-console': 'off',
   },
 };
